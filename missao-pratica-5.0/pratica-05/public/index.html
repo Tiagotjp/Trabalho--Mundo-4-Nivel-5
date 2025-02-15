@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js" crossorigin="anonymous" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/chart-device-data.js" type="text/javascript" charset="utf-8"></script>
+    <link href="css/style.css" rel="stylesheet" />
+
+    <title>Temperature &amp; Humidity Real-time Data</title>
+    <style>
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .export-buttons button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .export-buttons button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="flexHeader">
+        <span>
+            <span id="deviceCount">0 devices</span>
+            <select id="listOfDevices" class="select_box"></select>
+        </span>
+        <span>Temperature & Humidity Real-time Data</span>
+    </h1>
+    
+    <div class="export-buttons">
+        <button onclick="exportToCSV()">Salvar em CSV</button>
+        <button onclick="exportToText()">Salvar como Texto</button>
+    </div>
+
+    <div>
+        <canvas id="iotChart"></canvas>
+    </div>
+
+    <script>
+        function getChartData() {
+            let chart = Object.values(Chart.instances)[0];
+            let data = chart.data.labels.map((label, index) => {
+                return {
+                    Time: label,
+                    Temperature: chart.data.datasets[0].data[index],
+                    Humidity: chart.data.datasets[1].data[index]
+                };
+            });
+            return data;
+        }
+
+        function exportToCSV() {
+            let data = getChartData();
+            let csvContent = "data:text/csv;charset=utf-8,Time,Temperature,Humidity\n" +
+                data.map(row => `${row.Time},${row.Temperature},${row.Humidity}`).join("\n");
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "dashboard_data.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function exportToText() {
+            let data = getChartData();
+            let text = "Time, Temperature, Humidity\n" + data.map(row => `${row.Time}, ${row.Temperature}, ${row.Humidity}`).join("\n");
+            let blob = new Blob([text], { type: "text/plain" });
+            let link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "dashboard_data.txt";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
