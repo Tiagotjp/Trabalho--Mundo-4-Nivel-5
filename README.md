@@ -114,4 +114,4 @@ Acesse `https://MEU_APP.azurewebsites.net` para visualizar os dados online. 🌍
 
 🚀 **Desenvolvido para fins acadêmicos, explorando tecnologias IoT e nuvem!** 🌐
 
-![Image](https://github.com/user-attachments/assets/ee7db238-9b55-4eed-be5f-8684890655ed)
+![Image](https://github.com/user-attachments/assets/310c4f5c-08f7-417d-b40c-28ebc9df8d91)
